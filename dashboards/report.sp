@@ -548,17 +548,81 @@ dashboard "report" {
       query = query.ec2_instances_without_graviton_processor_table
     }  
 
-      text {
-        #width = 1
-        value = <<-EOM
-          #### Recomendações:
-
-          Recomenda-se revisar instâncias EC2 que não possuem processadores **Graviton**.   
-          Avaliar e considerar a migração para instâncias **Graviton** pode resultar em benefícios significativos de desempenho e eficiência de custos.   
-          Os processadores **Graviton**, baseados na arquitetura ARM, oferecem melhorias de desempenho e otimizações para cargas de trabalho específicas, proporcionando uma alternativa eficaz e econômica para instâncias tradicionais x86.
-        EOM
-        }          
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Recomenda-se revisar instâncias EC2 que não possuem processadores **Graviton**.   
+        Avaliar e considerar a migração para instâncias **Graviton** pode resultar em benefícios significativos de desempenho e eficiência de custos.   
+        Os processadores **Graviton**, baseados na arquitetura ARM, oferecem melhorias de desempenho e otimizações para cargas de trabalho específicas, proporcionando uma alternativa eficaz e econômica para instâncias tradicionais x86.
+      EOM
     }  
+    table {
+      title = "Attached EBS volumes should have encryption enabled"
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.ebs_attached_volume_encryption_enabled
+    }  
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Para garantir a segurança dos dados sensíveis em repouso, é altamente recomendado habilitar a criptografia para os volumes do AWS Elastic Block Store (AWS EBS) em sua conta AWS.    
+        Essa prática adiciona uma camada adicional de proteção, fortalecendo a segurança dos dados armazenados em seus volumes EBS na nuvem.
+      EOM
+    }     
+    table {
+      title = "EBS volumes should be attached to EC2 instances"
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.ebs_volume_unused
+    }  
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Certifique-se de verificar periodicamente se os volumes EBS estão devidamente anexados a instâncias do EC2.   
+        Isso ajuda a garantir que os recursos de armazenamento estejam sendo utilizados conforme o planejado e evita volumes não utilizados que podem gerar custos desnecessários.    
+        Considere automatizar esse processo por meio de scripts ou ferramentas de monitoramento para manter a conformidade contínua.
+      EOM
+    }  
+    table {
+      title = "Still using gp2 EBS volumes? Should use gp3 instead."
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.ebs_gp2_volumes
+    }  
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Considere migrar volumes EBS do tipo 'gp2' para 'gp3', pois os volumes 'gp3' oferecem melhor desempenho a um custo mais baixo.    
+        Antes de fazer a migração, avalie suas necessidades de desempenho e custo para garantir que 'gp3' atenda aos requisitos da sua carga de trabalho.   
+        Lembre-se de testar a migração em um ambiente controlado para validar o desempenho antes de aplicar em produção.
+      EOM
+    }       
+  }  
 
   container {
     title = "RDS"
@@ -640,7 +704,6 @@ dashboard "report" {
         width = 3
       }
 
-
       table {
       
         column "Account ID" {
@@ -674,7 +737,28 @@ dashboard "report" {
         Implemente autenticação forte e use criptografia para proteger a comunicação entre aplicativos e o banco de dados. Ative a opção de criptografia SSL/TLS.
 
       EOM
-    }    
+    }   
+    table {
+      title = "RDS DB instances without graviton processor should be reviewed"
+      column "Account ID" {
+        display = "none"
+      }
+      column "ARN" {
+        display = "none"
+      }
+      query = query.rds_db_instance_withou_graviton_processor
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Para otimizar o desempenho e reduzir os custos, considere utilizar instâncias de banco de dados RDS com processadores Graviton (arm64 - arquitetura ARM de 64 bits).   
+        Essas instâncias oferecem eficiência energética e um equilíbrio entre desempenho e custo. Além disso, as instâncias Graviton são projetadas para fornecer uma alternativa econômica com bom desempenho para determinados casos de uso.   
+        Avalie a compatibilidade de suas cargas de trabalho e experimente as instâncias Graviton para verificar os benefícios específicos para suas necessidades.
+
+      EOM
+    }  
+
   } 
   container {
     title = "VPC"
@@ -766,6 +850,17 @@ dashboard "report" {
       #}
       query = query.eks_cluster_with_latest_kubernetes_version_table
     } 
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Este controle verifica se um cluster Amazon EKS está sendo executado em uma versão suportada do Kubernetes.   
+        O controle considera falha se o cluster EKS estiver sendo executado em uma versão não suportada.
+
+        Se sua aplicação não exigir uma versão específica do Kubernetes, recomendamos que você utilize a versão mais recente disponível do Kubernetes suportada pelo EKS para seus clusters.   
+        Para obter mais informações sobre as versões do Kubernetes suportadas para o Amazon EKS, consulte o Calendário de lançamentos do Kubernetes do Amazon EKS e o Suporte à versão do Amazon EKS e Perguntas frequentes no Guia do Usuário do Amazon EKS.
+      EOM
+    }      
     table {
       title = "EKS cluster endpoint public access restricted"
       column "Account ID" {
@@ -776,6 +871,14 @@ dashboard "report" {
       #}
       query = query.eks_cluster_endpoints_should_prohibit_public_table  
     }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Clusters do EKS com acesso privado permitem que a comunicação entre seus nós e o servidor da API permaneça interna.   
+        Este controle está não conforme se o acesso público ao endpoint do cluster estiver habilitado, pois o servidor da API do cluster fica acessível pela internet.
+      EOM
+    }      
     table {
       title = "EKS cluster secret encrypted"
       column "Account ID" {
@@ -786,9 +889,15 @@ dashboard "report" {
       #}
       query = query.eks_cluster_secrets_encrypted_table
     }
-
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Certifique-se de que os clusters do Amazon Elastic Kubernetes Service (EKS) estejam configurados para ter segredos do Kubernetes criptografados usando chaves do AWS Key Management Service (KMS).
+      EOM
+    }  
     table {
-      title = "EKS cluster control plane audit logging enabled"
+      title = "EKS clusters should have control plane audit logging enabled"
       column "Account ID" {
         display = "none"
       }
@@ -797,11 +906,20 @@ dashboard "report" {
       #}
       query = query.eks_cluster_control_plane_audit_logging_enabled_table
     }
-  }      
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Os clusters do AWS EKS devem ter a auditoria do control plane habilitada.   
+        Esses logs facilitam a segurança e a administração eficiente dos clusters.
+      EOM
+    }      
+  }     
+
   container { 
     title = "CloudFront"
     table {
-      title = "Distribuitions origin access identity not enabled"
+      title = "CloudFront distributions should have origin access identity enabled"
       column "Account ID" {
         display = "none"
       }
@@ -810,6 +928,17 @@ dashboard "report" {
       #}
       query = query.cloudfront_distribution_origin_access_identity_enabled_table
     }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Certifique-se de que uma distribuição do Amazon CloudFront com tipo de origem Amazon S3 tenha a Identidade de Acesso à Origem (OAI) configurada.   
+        Este controle considera falha caso a OAI não esteja configurada.
+
+        O uso do CloudFront OAI impede que usuários acessem diretamente o conteúdo do bucket S3.   
+        Quando os usuários acessam diretamente um bucket S3, eles contornam efetivamente a distribuição do CloudFront e quaisquer permissões aplicadas ao conteúdo subjacente do bucket S3.
+      EOM
+    }     
     table {
       title = "CloudFront distributions should encrypt traffic to non S3 origins"
       column "Account ID" {
@@ -820,6 +949,18 @@ dashboard "report" {
       #}
       query = query.cloudfront_distribution_non_s3_origins_encryption_in_transit_enabled_table
     }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Este controle verifica se uma distribuição do Amazon CloudFront exige que os visualizadores usem HTTPS diretamente ou se ela usa redirecionamento.   
+        O controle considera falha se o ViewerProtocolPolicy estiver configurado como allow-all para defaultCacheBehavior ou para cacheBehaviors.
+
+        O uso de HTTPS (TLS) pode ajudar a evitar que possíveis atacantes usem ataques do tipo pessoa no meio ou similares para bisbilhotar ou manipular o tráfego de rede.    
+        Somente conexões criptografadas via HTTPS (TLS) devem ser permitidas. A criptografia de dados em trânsito pode afetar o desempenho.   
+        Recomenda-se testar sua aplicação com essa funcionalidade para entender o perfil de desempenho e o impacto do TLS.
+      EOM
+    }     
     table {
       title = "CloudFront distributions should have AWS WAF enabled"
       column "Account ID" {
@@ -829,7 +970,16 @@ dashboard "report" {
       #  display = "none"
       #}
       query = query.cloudfront_distribution_waf_enabled_table
-    }                  
+    }         
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Certifique-se de associar as distribuições do CloudFront a Web ACLs da AWS WAF ou AWS WAFv2.    
+        Essa prática é essencial para fortalecer a segurança, garantindo que as distribuições estejam protegidas contra possíveis ameaças.   
+        O controle considera falha se a distribuição não estiver associada a um Web ACL.
+      EOM
+    }              
   }
 
   container {

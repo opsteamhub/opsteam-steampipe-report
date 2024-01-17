@@ -111,3 +111,22 @@ query "rds_db_instance_public_count" {
       publicly_accessible;
   EOQ
 }
+
+query "rds_db_instance_withou_graviton_processor" {
+  sql = <<-EOQ
+    select
+      arn as resource,
+      case
+        when class like 'db.%g%.%' then 'ok'
+        else 'alarm'
+      end as status,
+      case
+        when class like 'db.%g%.%' then title || ' is using Graviton processor.'
+        else title || ' is not using Graviton processor.'
+      end as reason,
+      region,
+      account_id
+    from
+      aws_rds_db_instance;
+  EOQ
+}
