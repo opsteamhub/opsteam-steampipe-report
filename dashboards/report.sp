@@ -9,17 +9,15 @@ dashboard "report" {
   })
 
   container {
+    container {
     width = 9
-    
-
-    image {
-      src = "https://ops.team/wp-content/uploads/2023/06/logo2-1.png"
-      alt = "Ops Team Logo"
-      width = 3
-
-      }
+      image {
+        src = "https://ops.team/wp-content/uploads/2023/06/logo2-1.png"
+        alt = "Ops Team Logo"
+        width = 3
+      }      
+    }    
   }
-
 
   container {
 
@@ -403,74 +401,73 @@ dashboard "report" {
       }
     }  
   }
-  
 
   container {
     container {
       title = "DynamoDB"
-  }
-  container {
-    title = "DynamoDB table encryption report"
-    card {
-      query = query.dynamodb_table_count
-      width = 3
-      type = "info"
+      container {
+      title = "DynamoDB table encryption report"
+        card {
+          query = query.dynamodb_table_count
+          width = 3
+          type = "info"
+        }
+        card {
+          query = query.dynamodb_table_default_encryption
+          width = 3
+          type = "info"
+        }
+        card {
+          query = query.dynamodb_table_aws_managed_key_encryption
+          width = 3
+          type = "info"
+        }
+        card {
+          query = query.dynamodb_table_customer_managed_key_encryption
+          width = 3
+          type = "info"
+        }
+      }  
     }
-    card {
-      query = query.dynamodb_table_default_encryption
-      width = 3
-      type = "info"
-    }
-    card {
-      query = query.dynamodb_table_aws_managed_key_encryption
-      width = 3
-      type = "info"
-    }
-    card {
-      query = query.dynamodb_table_customer_managed_key_encryption
-      width = 3
-      type = "info"
-    }
-  }
-  container{
-    table {
-      #column "Account ID" {
-      #  display = "none"
-      #}
-      column "ARN" {
-        display = "none"
+    container{
+      table {
+        #column "Account ID" {
+        #  display = "none"
+        #}
+        column "ARN" {
+          display = "none"
+        }
+        query = query.dynamodb_table_encryption_table
       }
-      query = query.dynamodb_table_encryption_table
-    }
-    text {
-      #width = 1
-      value = <<-EOM
-        #### Recomendações:
-        Realizar uma análise minuciosa de cada bucket S3 é fundamental para determinar a real necessidade de mantê-lo público.       
-        Caso seja imprescindível, recomenda-se restringir o acesso exclusivamente ao CloudFront.    
-        Essa abordagem visa assegurar a segurança do bucket, fornecendo uma camada adicional de controle e autenticação por meio do Amazon CloudFront.
-      EOM
-      }    
-  }  
-  container {
-    table {
-      title = "DynamodDB table point in time recovery enabled"
-      #column "Account ID" {
-      #  display = "none"
-      #}
-      column "ARN" {
-        display = "none"
-      }
-      query = query.dynamodb_table_point_in_time_recovery_enabled
+      text {
+        #width = 1
+        value = <<-EOM
+          #### Recomendações:
+          Realizar uma análise minuciosa de cada bucket S3 é fundamental para determinar a real necessidade de mantê-lo público.       
+          Caso seja imprescindível, recomenda-se restringir o acesso exclusivamente ao CloudFront.    
+          Essa abordagem visa assegurar a segurança do bucket, fornecendo uma camada adicional de controle e autenticação por meio do Amazon CloudFront.
+        EOM
+        }    
     }  
-    text {
-      #width = 1
-      value = <<-EOM
-        #### Recomendações:
-        Realizar uma análise minuciosa de cada bucket S3 é fundamental para determinar a real necessidade de mantê-lo público.       
-        Caso seja imprescindível, recomenda-se restringir o acesso exclusivamente ao CloudFront.    
-        Essa abordagem visa assegurar a segurança do bucket, fornecendo uma camada adicional de controle e autenticação por meio do Amazon CloudFront.
-      EOM
+    container {
+      table {
+        title = "DynamodDB table point in time recovery enabled"
+        #column "Account ID" {
+        #  display = "none"
+        #}
+        column "ARN" {
+          display = "none"
+        }
+        query = query.dynamodb_table_point_in_time_recovery_enabled
+      }  
+      text {
+        #width = 1
+        value = <<-EOM
+          #### Recomendações:
+          Realizar uma análise minuciosa de cada bucket S3 é fundamental para determinar a real necessidade de mantê-lo público.       
+          Caso seja imprescindível, recomenda-se restringir o acesso exclusivamente ao CloudFront.    
+          Essa abordagem visa assegurar a segurança do bucket, fornecendo uma camada adicional de controle e autenticação por meio do Amazon CloudFront.
+        EOM
       }    
     }
   }
@@ -755,216 +752,148 @@ dashboard "report" {
       EOM
     } 
   }
-  container {
-    
-    container{
-      title = "EKS"
-      container { 
-        title = "EKS cluster runs on a supported kubernetes version"
 
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
 
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.eks_cluster_with_latest_kubernetes_version_table
-        }
+  container { 
+    title = "EKS"
+    table {
+      title = "EKS cluster runs on a supported kubernetes version"
+      column "Account ID" {
+        display = "none"
       }
-      container { 
-        title = "EKS cluster endpoint public access restricted"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.eks_cluster_endpoints_should_prohibit_public_table
-        }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.eks_cluster_with_latest_kubernetes_version_table
+    } 
+    table {
+      title = "EKS cluster endpoint public access restricted"
+      column "Account ID" {
+        display = "none"
       }
-      container { 
-        title = "EKS cluster secret encrypted"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.eks_cluster_secrets_encrypted_table
-        }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.eks_cluster_endpoints_should_prohibit_public_table  
+    }
+    table {
+      title = "EKS cluster secret encrypted"
+      column "Account ID" {
+        display = "none"
       }
-      container { 
-        title = "EKS cluster control plane audit logging enabled"
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.eks_cluster_secrets_encrypted_table
+    }
 
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.eks_cluster_control_plane_audit_logging_enabled_table
-        }
-      }      
-    }  
+    table {
+      title = "EKS cluster control plane audit logging enabled"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.eks_cluster_control_plane_audit_logging_enabled_table
+    }
+  }      
+  container { 
+    title = "CloudFront"
+    table {
+      title = "Distribuitions origin access identity not enabled"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.cloudfront_distribution_origin_access_identity_enabled_table
+    }
+    table {
+      title = "CloudFront distributions should encrypt traffic to non S3 origins"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.cloudfront_distribution_non_s3_origins_encryption_in_transit_enabled_table
+    }
+    table {
+      title = "CloudFront distributions should have AWS WAF enabled"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.cloudfront_distribution_waf_enabled_table
+    }                  
   }
 
   container {
-
-    container{
-      title = "CloudFront"
-
-      container { 
-        title = "Distribuitions origin access identity not enabled"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.cloudfront_distribution_origin_access_identity_enabled_table
-        }
-      }  
-      container { 
-        title = "CloudFront distributions should encrypt traffic to non S3 origins"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.cloudfront_distribution_non_s3_origins_encryption_in_transit_enabled_table
-        }
-      } 
-      container { 
-        title = "CloudFront distributions should have AWS WAF enabled"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.cloudfront_distribution_waf_enabled_table
-        }
-      }                
-    }  
-  }
-
-  container {
-
-    container{
-      title = "Cloudtrail"
-
-      container { 
-        title = "At least one CloudTrail trail should be enabled in the AWS account"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.cloudtrail_trail_enabled_account
-        }
-        text {
-          #width = 1
-          value = <<-EOM
-            #### Recomendações:
-            A recomendação da AWS é garantir que pelo menos uma trilha do CloudTrail esteja habilitada na conta da AWS.   
-            O CloudTrail fornece registros detalhados de eventos e atividades na sua conta, ajudando na auditoria, conformidade e na resposta a incidentes de segurança.    
-            Ter pelo menos uma trilha ativada é crucial para capturar e monitorar essas informações essenciais para a segurança e integridade da sua infraestrutura na AWS.
-          EOM
-        }         
-      }   
-      container { 
-        title = "CloudTrail trail log file validation should be enabled"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.cloudtrail_trail_validation_enabled
-        }
-        text {
-          #width = 1
-          value = <<-EOM
-            #### Recomendações:
-            Utilize a validação de arquivos de log do AWS CloudTrail para verificar a integridade dos registros do CloudTrail.   
-            A validação de arquivos de log ajuda a determinar se um arquivo de log foi modificado, excluído ou permanece inalterado após ser entregue pelo CloudTrail.   
-            Essa funcionalidade é construída utilizando algoritmos padrão da indústria: SHA-256 para hash e SHA-256 com RSA para assinatura digital.    
-            Isso torna computacionalmente inviável modificar, excluir ou falsificar arquivos de log do CloudTrail sem detecção.
-          EOM
-        }         
-      }       
-      container { 
-        title = "CloudTrail trail S3 buckets MFA delete should be enabled"
-
-        table {
-        
-          column "Account ID" {
-            display = "none"
-          }
-
-          #column "ARN" {
-          #  display = "none"
-          #}
-
-          query = query.cloudtrail_trail_bucket_mfa_enabled
-        }
-        text {
-          #width = 1
-          value = <<-EOM
-            #### Recomendações:
-            Garanta a ativação da autenticação multifator (MFA) para a exclusão nos buckets S3 da trilha do CloudTrail.   
-            A habilitação da MFA contribui para prevenir exclusões inadvertidas de buckets, uma vez que demanda que o usuário, ao iniciar a ação de exclusão, comprove a posse física de um dispositivo MFA por meio de um código específico.    
-            Essa medida adiciona uma camada adicional de segurança e obstáculos à realização da ação de exclusão.
-          EOM
-        } 
+    title = "Cloudtrail"
+    table {
+      title = "At least one CloudTrail trail should be enabled in the AWS account"
+      column "Account ID" {
+        display = "none"
       }
-    }  
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.cloudtrail_trail_enabled_account
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        A recomendação da AWS é garantir que pelo menos uma trilha do CloudTrail esteja habilitada na conta da AWS.   
+        O CloudTrail fornece registros detalhados de eventos e atividades na sua conta, ajudando na auditoria, conformidade e na resposta a incidentes de segurança.    
+        Ter pelo menos uma trilha ativada é crucial para capturar e monitorar essas informações essenciais para a segurança e integridade da sua infraestrutura na AWS.
+      EOM
+    }         
+    table {
+      title = "CloudTrail trail log file validation should be enabled"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.cloudtrail_trail_validation_enabled
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Utilize a validação de arquivos de log do AWS CloudTrail para verificar a integridade dos registros do CloudTrail.   
+        A validação de arquivos de log ajuda a determinar se um arquivo de log foi modificado, excluído ou permanece inalterado após ser entregue pelo CloudTrail.   
+        Essa funcionalidade é construída utilizando algoritmos padrão da indústria: SHA-256 para hash e SHA-256 com RSA para assinatura digital.    
+        Isso torna computacionalmente inviável modificar, excluir ou falsificar arquivos de log do CloudTrail sem detecção.
+      EOM
+    }         
+    table {
+      title = "CloudTrail trail S3 buckets MFA delete should be enabled"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.cloudtrail_trail_bucket_mfa_enabled
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Garanta a ativação da autenticação multifator (MFA) para a exclusão nos buckets S3 da trilha do CloudTrail.   
+        A habilitação da MFA contribui para prevenir exclusões inadvertidas de buckets, uma vez que demanda que o usuário, ao iniciar a ação de exclusão, comprove a posse física de um dispositivo MFA por meio de um código específico.    
+        Essa medida adiciona uma camada adicional de segurança e obstáculos à realização da ação de exclusão.
+      EOM
+    } 
   }
-}
+}  
+
 
 
