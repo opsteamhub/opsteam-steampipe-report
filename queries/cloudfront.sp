@@ -48,7 +48,7 @@ query "cloudfront_distribution_non_s3_origins_encryption_in_transit_enabled_tabl
                OR (o -> 'CustomOriginConfig' ->> 'OriginProtocolPolicy' = 'match-viewer'
                    AND o -> 'S3OriginConfig' IS NULL))
     )
-    SELECT b.id AS "Distribuitions",
+    SELECT b.id AS "Distributions",
            'alarm' AS "Status",
            ' origins traffic not encrypted in transit.' AS "Reason",
            b.region AS "Region",
@@ -62,7 +62,7 @@ query "cloudfront_distribution_non_s3_origins_encryption_in_transit_enabled_tabl
 query "cloudfront_distribution_waf_enabled_table" {
   sql = <<-EOQ
     SELECT
-      id AS "Distribuitions",
+      id AS "Distributions",
       'alarm' AS "Status",
       ' not associated with WAF.' AS "Reason",
       region AS "Region",

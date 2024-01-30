@@ -8,6 +8,7 @@ dashboard "report" {
     category = "Compliance"
   })
 
+
   container {
     container {
     width = 9
@@ -300,11 +301,8 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
-
-        Recomenda-se realizar a rotação regular de chaves na AWS para aumentar a segurança e reduzir o risco de comprometimento de credenciais.  
-        Implemente boas práticas, como a rotação regular de chaves, para fortalecer a segurança da conta AWS, reduzir o risco de acesso não autorizado e garantir o cumprimento de políticas de segurança.    
-        Considere a automação desse processo para simplificar a gestão de chaves e manter a conformidade ao longo do tempo.
-
+        Quando necessário o uso de funções IAM em contas diferentes, recomendamos criar funções com políticas restritas, como a política ReadOnlyAccess, para garantir acesso somente de leitura entre contas.  
+        Isso ajuda a limitar a exposição e os riscos de segurança associados às permissões concedidas.
       EOM
     }
   } 
@@ -380,7 +378,69 @@ dashboard "report" {
       }
     }
     container {
-     
+
+    chart {
+      title = "Buckets block public access" 
+      query = query.s3_bucket_public_access_blocked
+      type  = "donut"
+      width = 3
+    
+      series "count" {
+        point "blocked" {
+          color = "ok"
+        }
+        point "not blocked" {
+          color = "alert"
+        }
+      }
+    }
+    chart {
+      title = "Default Encryption Status"
+      query = query.s3_bucket_by_default_encryption_status
+      type  = "donut"
+      width = 3
+
+      series "count" {
+        point "enabled" {
+          color = "ok"
+        }
+        point "disabled" {
+          color = "alert"
+        }
+      }
+    }
+    chart {
+      title = "Logging Status"
+      query = query.s3_bucket_logging_status
+      type  = "donut"
+      width = 3
+
+      series "count" {
+        point "enabled" {
+          color = "ok"
+        }
+        point "disabled" {
+          color = "alert"
+        }
+      }
+    }
+
+    chart {
+      title = "Versioning Status"
+      query = query.s3_bucket_versioning_status
+      type  = "donut"
+      width = 3
+
+      series "count" {
+        point "enabled" {
+          color = "ok"
+        }
+        point "disabled" {
+          color = "alert"
+        }
+      }
+    }        
+
     table {
       title = "Buckets block public access" 
       column "ARN" {
@@ -398,8 +458,8 @@ dashboard "report" {
         Ative o **"Public Access Block"**:
         Certifique-se de ativar o **"Public Access Block"** em seus buckets do Amazon S3 para evitar que as políticas permitam o acesso público não intencional.
       EOM
-      }
-    }  
+      }      
+    }      
   }
 
   container {

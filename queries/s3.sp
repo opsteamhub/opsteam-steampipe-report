@@ -169,3 +169,104 @@ query "s3_public_access_block_bucket_table" {
   EOQ
 }
 
+query "s3_bucket_public_access_blocked" {
+  sql = <<-EOQ
+    with public_block_status as (
+      select
+        case
+          when block_public_acls
+          and block_public_policy
+          and ignore_public_acls
+          and restrict_public_buckets then 'blocked'
+          else 'not blocked'
+        end as block_status
+      from
+        aws_s3_bucket
+    )
+    select
+      block_status,
+      count(*)
+    from
+      public_block_status
+    group by
+      block_status;
+  EOQ
+}
+
+query "s3_bucket_by_default_encryption_status" {
+  sql = <<-EOQ
+    with default_encryption as (
+      select
+        case when server_side_encryption_configuration is not null then 'enabled' else 'disabled'
+        end as visibility
+      from
+        aws_s3_bucket
+    )
+    select
+      visibility,
+      count(*)
+    from
+      default_encryption
+    group by
+      visibility;
+  EOQ
+}
+
+query "s3_bucket_logging_status" {
+  sql = <<-EOQ
+    with logging_status as (
+      select
+        case when logging -> 'TargetBucket' is not null then 'enabled' else 'disabled'
+        end as visibility
+      from
+        aws_s3_bucket
+    )
+    select
+      visibility,
+      count(*)
+    from
+      logging_status
+    group by
+      visibility;
+      EOQ
+}
+
+query "s3_bucket_versioning_mfa_status" {
+  sql = <<-EOQ
+    with versioning_mfa_status as (
+      select
+        case
+          when versioning_mfa_delete then 'enabled' else 'disabled'
+        end as visibility
+      from
+        aws_s3_bucket
+    )
+    select
+      visibility,
+      count(*)
+    from
+      versioning_mfa_status
+    group by
+      visibility;
+  EOQ
+}
+
+query "s3_bucket_versioning_status" {
+  sql = <<-EOQ
+    with versioning_status as (
+      select
+        case
+          when versioning_enabled then 'enabled' else 'disabled'
+        end as visibility
+      from
+        aws_s3_bucket
+    )
+    select
+      visibility,
+      count(*)
+    from
+      versioning_status
+    group by
+      visibility;
+  EOQ
+}
