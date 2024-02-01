@@ -24,6 +24,8 @@ from
 +-----------------+---------------------+-------------+
 ```
 
+![dashboard](./images/dashboard.png)
+
 
 ### Install in MAC
 ```
