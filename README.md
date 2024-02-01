@@ -59,6 +59,8 @@ steampipe plugin install aws
 git clone git@github.com:opsteamhub/opsteam-steampipe-report.git
 
 steampipe dashboard
+
+http://localhost:9194
 ```
 
 ### Estrutura dos diretórios
@@ -69,3 +71,31 @@ O diretório queries contem todas as queries executadas no dashboard. Os arquivo
 #### dashboards
 Dentro do arquivo report.sp, contém as definições dos dashboards.
 
+#### Configuração de conta AWS
+
+O steampipe utiliza a autenticação do AWS CLI.
+
+No arquivo aws.spc, é possível definir os profiles de contas AWS configurados para o AWS CLI, para poder ser visualizados no steampipe.
+
+##### Exemplo de configuração
+```
+vi ~/.steampipe/config/aws.spc
+
+
+connection "aws_profile" {
+  plugin = "aws"
+  regions = ["*"]
+  profile = "profile_name" 
+}
+
+connection "aws_all" {
+  plugin      = "aws" 
+  type        = "aggregator"
+  connections = ["*"]
+}
+
+```
+
+Para mais informações, só seguir a documentação sobre configuração de contas.
+
+https://steampipe.io/docs/guides/aws-orgs
