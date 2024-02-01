@@ -161,3 +161,21 @@ query "ebs_gp2_volumes" {
     volume_type = 'gp2';
   EOQ
 }
+
+query "ec2_instance_protected_by_backup_plan" {
+  sql = <<-EOQ
+  select
+    volume_id as "Volume ID",
+    case
+      when volume_type = 'gp2' then 'alarm'
+      else 'skip'
+    end as "Status",
+    volume_type as "Reason",
+    region as "Region",
+    account_id as "Account ID"
+  from
+    aws_ebs_volume
+  where
+    volume_type = 'gp2';
+  EOQ
+}

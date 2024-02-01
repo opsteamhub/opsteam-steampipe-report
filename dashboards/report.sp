@@ -530,6 +530,29 @@ dashboard "report" {
         EOM
       }    
     }
+
+    container {
+      table {
+        title = "DynamoDB tables should be in a backup plan"
+        #column "Account ID" {
+        #  display = "none"
+        #}
+        column "ARN" {
+          display = "none"
+        }
+        query = query.dynamodb_table_in_backup_plan_table
+      }  
+      text {
+        #width = 1
+        value = <<-EOM
+          #### Recomendações:
+          Realizar uma análise minuciosa de cada bucket S3 é fundamental para determinar a real necessidade de mantê-lo público.       
+          Caso seja imprescindível, recomenda-se restringir o acesso exclusivamente ao CloudFront.    
+          Essa abordagem visa assegurar a segurança do bucket, fornecendo uma camada adicional de controle e autenticação por meio do Amazon CloudFront.
+        EOM
+      }    
+    }
+
   }
 
   container {
@@ -681,7 +704,30 @@ dashboard "report" {
         Antes de fazer a migração, avalie suas necessidades de desempenho e custo para garantir que 'gp3' atenda aos requisitos da sua carga de trabalho.   
         Lembre-se de testar a migração em um ambiente controlado para validar o desempenho antes de aplicar em produção.
       EOM
-    }       
+    }    
+    table {
+      title = "EC2 instances should be protected by backup plan"
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.ec2_instance_protected_by_backup_plan
+    }  
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Considere migrar volumes EBS do tipo 'gp2' para 'gp3', pois os volumes 'gp3' oferecem melhor desempenho a um custo mais baixo.    
+        Antes de fazer a migração, avalie suas necessidades de desempenho e custo para garantir que 'gp3' atenda aos requisitos da sua carga de trabalho.   
+        Lembre-se de testar a migração em um ambiente controlado para validar o desempenho antes de aplicar em produção.
+      EOM
+    }     
+
   }  
 
   container {
