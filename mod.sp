@@ -10,7 +10,7 @@ mod "opsteam_insights" {
   description   = "Security Assessment Report."
   color         = "#FF9900"
   icon          = "/images/mods/turbot/aws-insights.svg"
-  categories    = ["aws", "dashboard", "public cloud"]
+  categories    = ["aws", "dashboard", "public cloud", "security"]
 
   opengraph {
     title       = "Steampipe Mod for AWS"
