@@ -179,3 +179,40 @@ query "ec2_instance_protected_by_backup_plan" {
     volume_type = 'gp2';
   EOQ
 }
+
+query "list_ec2_instances_having_termination_protection_safety_feature_enabled" {
+  sql = <<-EOQ
+  select
+    instance_id,
+    disable_api_termination
+  from
+    aws_ec2_instance
+  where
+    not disable_api_termination;
+  EOQ
+}
+query "find_instances_which_have_default_security_group_attached" {
+  sql = <<-EOQ
+  select
+    instance_id,
+    sg ->> 'GroupId' as group_id,
+    sg ->> 'GroupName' as group_name
+  from
+    aws_ec2_instance
+    cross join jsonb_array_elements(security_groups) as sg
+  where
+    sg ->> 'GroupName' = 'default';
+  EOQ
+}
+query "list_instances_with_secrets_in_user_data" {
+  sql = <<-EOQ
+  select
+    instance_id,
+    user_data
+  from
+    aws_ec2_instance
+  where
+    user_data like any (array [ '%pass%', '%secret%', '%token%', '%key%' ])
+    or user_data ~ '(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]';
+  EOQ
+}
