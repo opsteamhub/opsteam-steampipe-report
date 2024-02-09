@@ -1,4 +1,3 @@
-
 dashboard "report" {
 
   title         = "Ops Team Security Assessment Report"
@@ -332,7 +331,59 @@ dashboard "report" {
 
       EOM
     }
+  }
+
+  container {
+    title = "List the roles that might allow other roles users to bypass their assigned IAM permissions"
+    table {
+      #column "Account ID" {
+      #  display = "none"
+      #}
+
+      column "User ARN" {
+        display = "none"
+      }
+
+      query = query.roles_that_might_allow_other_roles_users_to_bypass_assigned_iam_permissions
+    }
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+
+        Recomenda-se Determinar as áreas nas quais algumas funções podem permitir que outros usuários contornem as permissões do IAM atribuídas. 
+		Essa consulta é útil para identificar possíveis riscos de segurança e garantir que as permissões sejam atribuídas corretamente em seu ambiente AWS.
+
+      EOM
+    }
   }   
+  
+    container {
+    title = "IAM Access Analyzer Enabled"
+    table {
+      #column "Account ID" {
+      #  display = "none"
+      #}
+
+      column "User ARN" {
+        display = "none"
+      }
+
+      query = query.iam_access_analyzer_enabled
+    }
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+
+        Recomenda-se aplicar sempre o princípio de privilégio mínimo com análise de acesso e validação de políticas para definir, verificar e refinar permissões em seu ambiente AWS.
+		Analisar e remover acessos externos e não utilizados nas contas da AWS de forma centralizada e com monitoramento contínuo
+
+      EOM
+    }
+  }
 
   container {
     title = "S3"
@@ -592,7 +643,31 @@ dashboard "report" {
           Quando necessário acesso externo, opte pelo uso de Load Balancers para distribuir o tráfego de maneira segura, garantindo alta disponibilidade e gerenciamento eficiente.    
           Essa abordagem reduz a exposição direta de IPs públicos, fortalecendo a postura de segurança da infraestrutura na nuvem AWS.
         EOM
-        }   
+        }
+
+    table {
+      title = "List EC2 instances having termination protection safety feature enabled"
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.list_ec2_instances_having_termination_protection_safety_feature_enabled
+    }  
+
+      text {
+        #width = 1
+        value = <<-EOM
+          #### Recomendações:
+
+          Recomenda-se sempre manter habilitado esta funcionalidade em todas as EC2. Isto evita que qualquer EC2 possa ser finalizada/encerrada acidentalmente. Evitando assim
+		  problemas futuros em disponibilidade do serviço, garantindo sua estabilidade.
+ 
+        EOM
+        } 		
 
     table {
       title = "EC2 instances should not use older generation t2, m3, and m4 instance types"
@@ -726,7 +801,49 @@ dashboard "report" {
         Antes de fazer a migração, avalie suas necessidades de desempenho e custo para garantir que 'gp3' atenda aos requisitos da sua carga de trabalho.   
         Lembre-se de testar a migração em um ambiente controlado para validar o desempenho antes de aplicar em produção.
       EOM
-    }     
+    } 
+    table {
+      title = "Find instances which have default security group attached"
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.find_instances_which_have_default_security_group_attached
+    }  
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Recomenda-se sempre analisar os segmentos que possuem o grupo de segurança padrão anexado a eles para identificar possíveis riscos de segurança. 
+		Isto é útil para manter práticas de segurança ideais e garantir que as instâncias não utilizem configurações padrão, que podem ser mais vulneráveis.
+      EOM
+    } 
+    table {
+      title = "List instances with secrets in user data"
+      column "Account ID" {
+        display = "none"
+      }
+
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.list_instances_with_secrets_in_user_data
+    }  
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Recomenda-se sempre analisar as instâncias que podem conter informações confidenciais nos dados do usuário. 
+		Isto é benéfico para identificar potenciais riscos de segurança e garantir a conformidade com a privacidade dos dados.
+      EOM
+    }    
 
   }  
 
@@ -1149,7 +1266,87 @@ dashboard "report" {
       EOM
     } 
   }
-}  
+  
+  container { 
+    title = "LAMBDA"
+    table {
+      title = "Lambda Function Variables No Sensitive Data"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.lambda_function_variables_no_sensitive_data
+    } 
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Certifique-se de que as variáveis ​​de ambiente das funções não contenham dados confidenciais. 
+		Aproveitar o Secrets Manager permite o provisionamento seguro de credenciais de banco de dados para funções Lambda, ao mesmo tempo que garante a segurança dos bancos de dados. 
+		Essa abordagem elimina a necessidade de codificar segredos no código ou passá-los por meio de variáveis ​​ambientais. 
+		Além disso, o Secrets Manager facilita a recuperação segura de credenciais para estabelecer conexões com bancos de dados e realizar consultas, aprimorando as medidas gerais de segurança.
+      EOM
+    } 
+  
+    table {
+      title = "Lambda Function Cloudtrail Logging Enabled"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.lambda_function_cloudtrail_logging_enabled
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Utilize a validação de arquivos de log do AWS CloudTrail para verificar a integridade dos registros do CloudTrail.   
+        A validação de arquivos de log ajuda a determinar se um arquivo de log foi modificado, excluído ou permanece inalterado após ser entregue pelo CloudTrail.   
 
-
-
+      EOM
+    }
+    
+    table {
+      title = "Lambda Function Use Latest Runtime"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.lambda_function_use_latest_runtime
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Utilize a validação de arquivos de log do AWS CloudTrail para verificar a integridade dos registros do CloudTrail.   
+ 
+      EOM
+    }
+  }
+  container { 
+    title = "ELB"
+    table {
+      title = "ELB TLS Listener Protocol Version"
+      column "Account ID" {
+        display = "none"
+      }
+      #column "ARN" {
+      #  display = "none"
+      #}
+      query = query.elb_tls_listener_protocol_version
+    } 
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        CSecrets Manager facilita a recuperação segura de credenciais para estabelecer conexões com bancos de dados e realizar consultas, aprimorando as medidas gerais de segurança.
+      EOM
+    }
+  }
+}
