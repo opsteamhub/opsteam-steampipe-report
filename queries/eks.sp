@@ -13,6 +13,7 @@ query "eks_cluster_with_latest_kubernetes_version_table" {
         when (version) :: decimal >= 1.23 then ' runs on a supported kubernetes version.'
         else ' does not run on a supported kubernetes version.'
       end as "Reason",
+      version as "Version",
       region as "Region",
       account_id as "Account ID"
     from
