@@ -164,19 +164,29 @@ query "ebs_gp2_volumes" {
 
 query "ec2_instance_protected_by_backup_plan" {
   sql = <<-EOQ
+  with backup_protected_instance as (
   select
-    volume_id as "Volume ID",
-    case
-      when volume_type = 'gp2' then 'alarm'
-      else 'skip'
-    end as "Status",
-    volume_type as "Reason",
-    region as "Region",
-    account_id as "Account ID"
+    resource_arn as arn
   from
-    aws_ebs_volume
+    aws_backup_protected_resource as b
   where
-    volume_type = 'gp2';
+    resource_type = 'EC2'
+  ) 
+  select
+    i.arn as resource,
+    case
+      when b.arn is not null then 'ok'
+      else 'alarm'
+    end as status,
+    case
+      when b.arn is not null then i.title || ' is protected by backup plan.'
+      else i.title || ' is not protected by backup plan.'
+    end as reason,
+    i.region,
+    i.account_id
+  from
+    aws_ec2_instance as i
+    left join backup_protected_instance as b on i.arn = b.arn;
   EOQ
 }
 
