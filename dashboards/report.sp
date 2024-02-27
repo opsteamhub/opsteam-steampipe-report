@@ -822,7 +822,7 @@ dashboard "report" {
         #### Recomendações:
 
         Recomenda-se sempre analisar os segmentos que possuem o grupo de segurança padrão anexado a eles para identificar possíveis riscos de segurança. 
-		Isto é útil para manter práticas de segurança ideais e garantir que as instâncias não utilizem configurações padrão, que podem ser mais vulneráveis.
+		    Isto é útil para manter práticas de segurança ideais e garantir que as instâncias não utilizem configurações padrão, que podem ser mais vulneráveis.
       EOM
     } 
     table {
@@ -843,7 +843,7 @@ dashboard "report" {
       value = <<-EOM
         #### Recomendações:
         Recomenda-se sempre analisar as instâncias que podem conter informações confidenciais nos dados do usuário. 
-		Isto é benéfico para identificar potenciais riscos de segurança e garantir a conformidade com a privacidade dos dados.
+		    Isto é benéfico para identificar potenciais riscos de segurança e garantir a conformidade com a privacidade dos dados.
       EOM
     }    
 
