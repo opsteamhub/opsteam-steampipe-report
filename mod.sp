@@ -17,5 +17,9 @@ mod "opsteam_insights" {
     description = "Security Assessment Report."
     image       = "/images/mods/turbot/aws-insights-social-graphic.png"
   }
-
+  require {
+    plugin "aws" {
+      min_version = "0.131.0"
+    }
+  }
 }
