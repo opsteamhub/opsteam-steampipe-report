@@ -353,7 +353,7 @@ dashboard "report" {
         #### Recomendações:
 
         Recomenda-se Determinar as áreas nas quais algumas funções podem permitir que outros usuários contornem as permissões do IAM atribuídas. 
-		Essa consulta é útil para identificar possíveis riscos de segurança e garantir que as permissões sejam atribuídas corretamente em seu ambiente AWS.
+		    Essa consulta é útil para identificar possíveis riscos de segurança e garantir que as permissões sejam atribuídas corretamente em seu ambiente AWS.
 
       EOM
     }
@@ -379,7 +379,7 @@ dashboard "report" {
         #### Recomendações:
 
         Recomenda-se aplicar sempre o princípio de privilégio mínimo com análise de acesso e validação de políticas para definir, verificar e refinar permissões em seu ambiente AWS.
-		Analisar e remover acessos externos e não utilizados nas contas da AWS de forma centralizada e com monitoramento contínuo
+		    Analisar e remover acessos externos e não utilizados nas contas da AWS de forma centralizada e com monitoramento contínuo
 
       EOM
     }
@@ -664,7 +664,7 @@ dashboard "report" {
           #### Recomendações:
 
           Recomenda-se sempre manter habilitado esta funcionalidade em todas as EC2. Isto evita que qualquer EC2 possa ser finalizada/encerrada acidentalmente. Evitando assim
-		  problemas futuros em disponibilidade do serviço, garantindo sua estabilidade.
+		      problemas futuros em disponibilidade do serviço, garantindo sua estabilidade.
  
         EOM
         } 		
@@ -732,6 +732,7 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
+
         Para garantir a segurança dos dados sensíveis em repouso, é altamente recomendado habilitar a criptografia para os volumes do AWS Elastic Block Store (AWS EBS) em sua conta AWS.    
         Essa prática adiciona uma camada adicional de proteção, fortalecendo a segurança dos dados armazenados em seus volumes EBS na nuvem.
       EOM
@@ -819,6 +820,7 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
+
         Recomenda-se sempre analisar os segmentos que possuem o grupo de segurança padrão anexado a eles para identificar possíveis riscos de segurança. 
 		Isto é útil para manter práticas de segurança ideais e garantir que as instâncias não utilizem configurações padrão, que podem ser mais vulneráveis.
       EOM
@@ -908,6 +910,7 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
+        
         Recomenda-se gerar e revisar periodicamente o relatório de criptografia de instâncias de banco de dados (DB Instances) na AWS RDS.    
         Certifique-se de que todas as instâncias de banco de dados estão configuradas para usar a criptografia, o que é fundamental para proteger dados sensíveis e garantir conformidade com requisitos de segurança.   
         Adicionalmente, avalie a implementação de boas práticas de gerenciamento de chaves, como a rotação regular e o controle de acesso adequado às chaves de criptografia utilizadas nas instâncias do RDS.   
@@ -1284,9 +1287,9 @@ dashboard "report" {
       value = <<-EOM
         #### Recomendações:
         Certifique-se de que as variáveis ​​de ambiente das funções não contenham dados confidenciais. 
-		Aproveitar o Secrets Manager permite o provisionamento seguro de credenciais de banco de dados para funções Lambda, ao mesmo tempo que garante a segurança dos bancos de dados. 
-		Essa abordagem elimina a necessidade de codificar segredos no código ou passá-los por meio de variáveis ​​ambientais. 
-		Além disso, o Secrets Manager facilita a recuperação segura de credenciais para estabelecer conexões com bancos de dados e realizar consultas, aprimorando as medidas gerais de segurança.
+		    Aproveitar o Secrets Manager permite o provisionamento seguro de credenciais de banco de dados para funções Lambda, ao mesmo tempo que garante a segurança dos bancos de dados. 
+		    Essa abordagem elimina a necessidade de codificar segredos no código ou passá-los por meio de variáveis ​​ambientais. 
+		    Além disso, o Secrets Manager facilita a recuperação segura de credenciais para estabelecer conexões com bancos de dados e realizar consultas, aprimorando as medidas gerais de segurança.
       EOM
     } 
   
