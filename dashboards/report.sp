@@ -985,6 +985,32 @@ dashboard "report" {
       EOM
     }  
 
+
+    table {
+      title = "RDS DB instances MySQL Engine Version < 8"
+      column "Account ID" {
+        display = "none"
+      }
+  
+      column "ARN" {
+        display = "none"
+      }
+
+      query = query.rds_db_instance_engine_version
+      
+    }
+
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        
+        Recomenda-se... 
+      EOM
+    }
+
+
+
   } 
   container {
     title = "VPC"

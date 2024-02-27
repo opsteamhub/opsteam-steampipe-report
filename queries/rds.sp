@@ -130,3 +130,12 @@ query "rds_db_instance_withou_graviton_processor" {
       aws_rds_db_instance;
   EOQ
 }
+
+query "rds_db_instance_engine_version" {
+  sql = <<-EOQ
+    SELECT db_instance_identifier, db_cluster_identifier, engine, engine_version, region, account_id
+    FROM aws_rds_db_instance
+    WHERE engine = 'mysql'
+    AND SPLIT_PART(engine_version, '.', 1)::INTEGER < 8;
+  EOQ
+}
