@@ -82,20 +82,20 @@ query "rds_db_instance_public_access_table" {
   sql = <<-EOQ
     select
       i.db_instance_identifier as "DB Instance Identifier",
-      case
-        when i.publicly_accessible then 'Public' else 'Private' end as "Public/Private",
+      'Public' as "Public/Private",
       i.status as "Status",
       a.title as "Account",
       i.account_id as "Account ID",
       i.region as "Region",
       i.arn as "ARN"
     from
-      aws_rds_db_instance as i,
-      aws_account as a
+      aws_rds_db_instance as i
+      join aws_account as a on i.account_id = a.account_id
     where
-      i.account_id = a.account_id
+      i.publicly_accessible = true
     order by
       i.db_instance_identifier;
+
   EOQ
 }
 

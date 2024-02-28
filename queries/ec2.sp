@@ -216,13 +216,12 @@ query "find_instances_which_have_default_security_group_attached" {
 }
 query "list_instances_with_secrets_in_user_data" {
   sql = <<-EOQ
-  select
-    instance_id,
-    user_data
-  from
-    aws_ec2_instance
-  where
-    user_data like any (array [ '%pass%', '%secret%', '%token%', '%key%' ])
-    or user_data ~ '(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]';
+    SELECT
+      instance_id,
+      user_data
+    FROM
+      aws_ec2_instance
+    WHERE
+      user_data ILIKE ANY (ARRAY['%ACCESS_KEY_ID%', '%SECRET_KEY_ID%', '%password%', '%user%', '%senha%', '%usuario%', '%USER_PASS%']);
   EOQ
 }

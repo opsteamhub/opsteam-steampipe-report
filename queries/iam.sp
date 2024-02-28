@@ -132,28 +132,27 @@ query "iam_access_key_age_table" {
         k.create_date as create_date,
         k.account_id as account_id
       from
-        aws_iam_access_key as k,
-        aws_iam_user as u
-      where
-        u.name = k.user_name
-      )
-      select
-        ak.user as "User",
-        ak.access_key_id as "Access Key ID",
-        ak.age_in_days as "Age in Days",
-        ak.create_date as "Create Date",
-        ak.status as "Status",
-        ak.user_arn as "User ARN",
-        a.title as "Account",
-        ak.account_id as "Account ID"
-      from
-        access_key as ak,
-        aws_account as a
-      where
-        a.account_id = ak.account_id
-      order by
-        ak.create_date,
-        ak.user;
+        aws_iam_access_key as k
+        join aws_iam_user as u on u.name = k.user_name
+    )
+    select
+      ak.user as "User",
+      ak.access_key_id as "Access Key ID",
+      ak.age_in_days as "Age in Days",
+      ak.create_date as "Create Date",
+      ak.status as "Status",
+      ak.user_arn as "User ARN",
+      a.title as "Account",
+      ak.account_id as "Account ID"
+    from
+      access_key as ak
+      join aws_account as a on a.account_id = ak.account_id
+    where
+      ak.age_in_days > 365
+    order by
+      ak.create_date,
+      ak.user;
+
   EOQ
 }
 
@@ -360,13 +359,9 @@ query "iam_access_analyzer_enabled" {
   sql = <<-EOQ
     select
       'arn:' || r.partition || '::' || r.region || ':' || r.account_id as resource,
+      'alarm' as status,
       case
         -- Skip any regions that are disabled in the account.
-        when r.opt_in_status = 'not-opted-in' then 'skip'
-        when aa.arn is not null then 'ok'
-        else 'alarm'
-      end as status,
-      case
         when r.opt_in_status = 'not-opted-in' then r.region || ' region is disabled.'
         when aa.arn is not null then aa.name || ' enabled in ' || r.region || '.'
         else 'Access Analyzer not enabled in ' || r.region || '.'
@@ -376,8 +371,11 @@ query "iam_access_analyzer_enabled" {
     from
       aws_region as r
       left join aws_accessanalyzer_analyzer as aa on r.account_id = aa.account_id
-      and r.region = aa.region;
-  EOQ
+      and r.region = aa.region
+    where
+      (r.opt_in_status <> 'not-opted-in' or aa.arn is not null);
+    
+      EOQ
 }
 
 

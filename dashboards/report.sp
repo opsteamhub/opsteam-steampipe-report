@@ -360,7 +360,7 @@ dashboard "report" {
   }   
   
     container {
-    title = "IAM Access Analyzer Enabled"
+    title = "IAM Access Analyzer Not Enabled"
     table {
       #column "Account ID" {
       #  display = "none"
@@ -643,31 +643,7 @@ dashboard "report" {
           Quando necessário acesso externo, opte pelo uso de Load Balancers para distribuir o tráfego de maneira segura, garantindo alta disponibilidade e gerenciamento eficiente.    
           Essa abordagem reduz a exposição direta de IPs públicos, fortalecendo a postura de segurança da infraestrutura na nuvem AWS.
         EOM
-        }
-
-    table {
-      title = "List EC2 instances having termination protection safety feature enabled"
-      column "Account ID" {
-        display = "none"
-      }
-
-      column "ARN" {
-        display = "none"
-      }
-
-      query = query.list_ec2_instances_having_termination_protection_safety_feature_enabled
-    }  
-
-      text {
-        #width = 1
-        value = <<-EOM
-          #### Recomendações:
-
-          Recomenda-se sempre manter habilitado esta funcionalidade em todas as EC2. Isto evita que qualquer EC2 possa ser finalizada/encerrada acidentalmente. Evitando assim
-		      problemas futuros em disponibilidade do serviço, garantindo sua estabilidade.
- 
-        EOM
-        } 		
+        }		
 
     table {
       title = "EC2 instances should not use older generation t2, m3, and m4 instance types"
@@ -1004,8 +980,13 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
-        
-        Recomenda-se... 
+        O suporte padrão a bancos de dados em RDS na AWS não possui custo adicional para recursos dentro de seu ciclo de vida na comunidade.   
+        Após o término deste ciclo de vida, a AWS estabelece uma cobrança estendida para suportar tais recursos.   
+        **Fonte:** https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/extended-support.html   
+        Em **01/03/2024**, inicia-se a cobrança estendida para bancos de dados MySQL Community na versão 5.7.   
+        A partir desta data, a AWS fornecerá correções para problemas e bugs críticos de segurança por meio de patches, dando até três anos para fazer a atualização para uma nova versão principal.  
+        **Fonte:** https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/MySQL.Concepts.VersionMgmt.html#MySQL.Concepts.VersionMgmt.ReleaseCalendar   
+ 
       EOM
     }
 
@@ -1299,7 +1280,7 @@ dashboard "report" {
   container { 
     title = "LAMBDA"
     table {
-      title = "Lambda Function Variables No Sensitive Data"
+      title = "Lambda functions variable should not have any sensitive data"
       column "Account ID" {
         display = "none"
       }
@@ -1318,26 +1299,6 @@ dashboard "report" {
 		    Além disso, o Secrets Manager facilita a recuperação segura de credenciais para estabelecer conexões com bancos de dados e realizar consultas, aprimorando as medidas gerais de segurança.
       EOM
     } 
-  
-    table {
-      title = "Lambda Function Cloudtrail Logging Enabled"
-      column "Account ID" {
-        display = "none"
-      }
-      #column "ARN" {
-      #  display = "none"
-      #}
-      query = query.lambda_function_cloudtrail_logging_enabled
-    }
-    text {
-      #width = 1
-      value = <<-EOM
-        #### Recomendações:
-        Utilize a validação de arquivos de log do AWS CloudTrail para verificar a integridade dos registros do CloudTrail.   
-        A validação de arquivos de log ajuda a determinar se um arquivo de log foi modificado, excluído ou permanece inalterado após ser entregue pelo CloudTrail.   
-
-      EOM
-    }
     
     table {
       title = "Lambda Function Use Latest Runtime"
@@ -1353,7 +1314,7 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
-        Utilize a validação de arquivos de log do AWS CloudTrail para verificar a integridade dos registros do CloudTrail.   
+        Recomenda-se atualizar as funções Lambda para utilizar as versões mais recentes de runtimes disponíveis, como Node.js 16.x, Python 3.9, ou outras, para garantir a eficiência, segurança e acesso às últimas funcionalidades oferecidas pelas plataformas de desenvolvimento. Isso requer revisão e ajuste das configurações das funções Lambda no AWS Management Console ou através de automação de implantação. Certifique-se de testar e validar as alterações para evitar impactos negativos na funcionalidade e desempenho das funções, mantendo também uma monitorização contínua para garantir a conformidade com as práticas recomendadas da AWS.
  
       EOM
     }
@@ -1374,7 +1335,7 @@ dashboard "report" {
       #width = 1
       value = <<-EOM
         #### Recomendações:
-        CSecrets Manager facilita a recuperação segura de credenciais para estabelecer conexões com bancos de dados e realizar consultas, aprimorando as medidas gerais de segurança.
+        Recomenda-se verificar e atualizar as configurações dos listeners do Elastic Load Balancer (ELB) para utilizar versões mais recentes e seguras do protocolo TLS, como TLSv1.2 ou superior, garantindo a proteção adequada dos dados transmitidos. Realize testes e monitoramento contínuo para garantir a conformidade e a segurança dos serviços, documentando todas as alterações realizadas. Envolva as equipes de sistemas e segurança para uma implementação eficaz e esteja atualizado sobre as melhores práticas de segurança da AWS.
       EOM
     }
   }

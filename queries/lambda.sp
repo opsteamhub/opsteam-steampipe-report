@@ -14,23 +14,20 @@ query "lambda_function_variables_no_sensitive_data" {
         or d.key ~ '(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]'
         or d.value ilike any (array [ '%pass%', '%secret%', '%token%', '%key%' ])
         or d.value ~ '(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]'
-)
+    )
     select
       f.arn as resource,
-      case
-        when b.arn is null then 'ok'
-        else 'alarm'
-      end as status,
-      case
-        when b.arn is null then f.title || ' has no sensitive data.'
-        else f.title || ' has potential sensitive data.'
-      end as reason,
+      'alarm' as status,
+      f.title || ' has potential sensitive data.' as reason,
       region,
       account_id
     from
       aws_lambda_function as f
-      left join function_vaiable_with_sensitive_data b on f.arn = b.arn;
-
+      join function_vaiable_with_sensitive_data b on f.arn = b.arn
+    where
+      b.arn is not null
+    order by
+      f.title;
   EOQ
 }
 
@@ -161,7 +158,26 @@ query "lambda_function_use_latest_runtime" {
       region,
       account_id
     from
-      aws_lambda_function;
-  
+      aws_lambda_function
+    where
+      (package_type = 'Zip' and runtime not in (
+        'nodejs18.x',
+        'nodejs16.x',
+        'nodejs14.x',
+        'python3.10',
+        'python3.9',
+        'python3.8',
+        'python3.7',
+        'ruby3.2',
+        'ruby2.7',
+        'java17',
+        'java11',
+        'java8',
+        'java8.al2',
+        'go1.x',
+        'dotnet7',
+        'dotnet6'
+      ));
+    
   EOQ
 }
