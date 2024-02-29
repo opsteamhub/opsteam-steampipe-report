@@ -139,3 +139,43 @@ query "rds_db_instance_engine_version" {
     AND SPLIT_PART(engine_version, '.', 1)::INTEGER < 8;
   EOQ
 }
+
+
+query "rds_db_instance_certificate_expiry_table" {
+  sql = <<-EOQ
+    select
+      db_instance_identifier as "DB Name",
+      'alarm' as status,
+      ' expires ' || to_char(
+        to_timestamp(certificate ->> 'ValidTill', 'YYYY-MM-DDTHH:MI:SS'),
+        'DD-Mon-YYYY'
+      ) || ' (' || extract(
+        day
+        from
+          (
+            to_timestamp(certificate ->> 'ValidTill', 'YYYY-MM-DDTHH:MI:SS')
+          ) - current_timestamp
+      ) || ' days).' as "Reason",
+      engine as "Engine",
+      engine_version as "Engine Version",
+      class as "DB Class",
+      storage_type as "Storage Type",
+      region as "Region",
+      account_id as "Account ID"
+    from
+      aws_rds_db_instance
+    where
+      extract(
+        day
+        from
+          (
+            to_timestamp(certificate ->> 'ValidTill', 'YYYY-MM-DDTHH:MI:SS')
+          ) - current_timestamp
+      ) <= '365';
+  EOQ
+}
+
+
+
+
+

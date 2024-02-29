@@ -961,6 +961,26 @@ dashboard "report" {
       EOM
     }  
 
+    table {
+      title = "RDS DB instances CA certificates should expire within next 180 days"
+
+      column "ARN" {
+        display = "none"
+      }
+      query = query.rds_db_instance_certificate_expiry_table
+    }
+    text {
+      #width = 1
+      value = <<-EOM
+        #### Recomendações:
+        Verifique todas as instâncias de banco de dados RDS cujos certificados CA estão definidos para expirar nos próximos 180 dias.   
+        Estes certificados são essenciais para garantir a segurança das comunicações entre os bancos de dados e os clientes ou outras instâncias.   
+        O não cumprimento dessa recomendação pode levar a interrupções nos serviços e possíveis violações de segurança.  
+
+      EOM
+    }  
+
+
 
     table {
       title = "RDS DB instances MySQL Engine Version < 8"
