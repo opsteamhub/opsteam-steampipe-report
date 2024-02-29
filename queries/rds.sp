@@ -160,10 +160,12 @@ query "rds_db_instance_certificate_expiry_table" {
       engine_version as "Engine Version",
       class as "DB Class",
       storage_type as "Storage Type",
-      region as "Region",
-      account_id as "Account ID"
+      c.region as "Region",  -- Adicionando o alias da tabela para a coluna 'region'
+      a.title as "Account",
+      c.account_id as "Account ID"
     from
-      aws_rds_db_instance
+      aws_rds_db_instance as c
+      inner join aws_account as a on c.account_id = a.account_id
     where
       extract(
         day
