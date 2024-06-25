@@ -390,9 +390,6 @@ dashboard "report" {
     column "ARN" {
       display = "none"
     }
-    column "Account ID" {
-      display = "none"
-    }    
 
     query = query.iam_describe_users
   }
