@@ -379,3 +379,14 @@ query "iam_access_analyzer_enabled" {
 }
 
 
+query "iam_describe_users" {
+  sql = <<-EOQ
+    select
+      name,
+      create_date,
+      password_last_used,
+      account_id
+    from
+  aws_iam_user;
+      EOQ
+}

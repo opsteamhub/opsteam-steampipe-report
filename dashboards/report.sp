@@ -385,6 +385,18 @@ dashboard "report" {
     }
   }
 
+  table {
+    title = "IAM describe users"
+    column "ARN" {
+      display = "none"
+    }
+    column "Account ID" {
+      display = "none"
+    }    
+
+    query = query.iam_describe_users
+  }
+
   container {
     title = "S3"
     
