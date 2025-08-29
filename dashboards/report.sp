@@ -1,6 +1,6 @@
 dashboard "report" {
 
-  title         = "Ops Team Security Assessment Report"
+  title         = "Opsteam Security Assessment Report"
 
   tags = merge(local.aws_common_tags, {
     type     = "Report"
@@ -12,8 +12,8 @@ dashboard "report" {
     container {
     width = 9
       image {
-        src = "https://ops.team/wp-content/uploads/2023/06/logo2-1.png"
-        alt = "Ops Team Logo"
+        src = "./images/ops-logo.png"
+        alt = "Opsteam Logo"
         width = 3
       }      
     }    

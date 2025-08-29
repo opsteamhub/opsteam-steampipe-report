@@ -1,4 +1,4 @@
-# Ops Team Steampipe Report
+# Opsteam Steampipe Report
 
 Esse projeto tem como objetivo criar um dashboard customizado utilizando o steampipe, resumindo os principais pontos de melhoria nas contas AWS dos clientes.
 

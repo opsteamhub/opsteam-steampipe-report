@@ -6,7 +6,7 @@ locals {
 
 mod "opsteam_insights" {
   # hub metadata
-  title         = "Ops Team Security Assessment Report"
+  title         = "Opsteam Security Assessment Report"
   description   = "Security Assessment Report."
   color         = "#FF9900"
   icon          = "/images/mods/turbot/aws-insights.svg"
