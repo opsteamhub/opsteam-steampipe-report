@@ -12,7 +12,7 @@ dashboard "report" {
     container {
     width = 9
       image {
-        src = "./images/ops-logo.png"
+        src = "images/ops-logo.png"
         alt = "Opsteam Logo"
         width = 3
       }      
