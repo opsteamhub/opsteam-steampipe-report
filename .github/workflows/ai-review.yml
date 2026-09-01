@@ -1,0 +1,64 @@
+name: AI PR Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ai-pr-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  ai-summary:
+    # Repository and organization secrets are unavailable to forked PRs. Keep
+    # the OIDC boundary explicit instead of attempting a privileged fork run.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout trusted base revision
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+
+      - name: Check trusted review implementation
+        id: trusted-review
+        shell: bash
+        run: |
+          if [[ -x .github/scripts/ai-review.sh ]] \
+            && [[ -f .github/prompts/review-prompt.txt ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "Trusted base does not contain the AI review implementation; bootstrap run skipped."
+          fi
+
+      - name: Configure AWS credentials
+        if: steps.trusted-review.outputs.available == 'true'
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5
+        with:
+          role-to-assume: ${{ secrets.PRD_AWS_ROLE_TO_AI_REVIEW }}
+          role-session-name: githubaction
+          aws-region: us-east-1
+          allowed-account-ids: "288109893636"
+
+      - name: Generate advisory AI review
+        if: steps.trusted-review.outputs.available == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BEDROCK_MODEL_ID: us.openai.gpt-5.6-sol
+          BEDROCK_MODEL_NAME: "OpenAI GPT-5.6 Sol"
+          BEDROCK_FALLBACK_MODEL_ID: us.anthropic.claude-sonnet-5
+          BEDROCK_FALLBACK_MODEL_NAME: "Claude Sonnet 5"
+        run: |
+          .github/scripts/ai-review.sh \
+            "${{ github.event.pull_request.number }}" \
+            "${{ github.repository }}" \
+            ".github/prompts/review-prompt.txt"
